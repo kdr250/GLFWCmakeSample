@@ -10,7 +10,12 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/glfw/glfw.git
     GIT_TAG 3.3.8
 )
-FetchContent_MakeAvailable(GLFW)
+FetchContent_Declare(
+  glew
+  GIT_REPOSITORY https://github.com/Perlmint/glew-cmake.git
+  GIT_TAG        origin/master
+)
+FetchContent_MakeAvailable(GLFW glew)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
@@ -26,6 +31,7 @@ add_executable(
 target_link_libraries(
     GlfwWithCMake
     glfw
+    libglew_static
 )
 
 if(APPLE)
