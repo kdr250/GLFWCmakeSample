@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <cstdlib>
 
 int main()
 {
@@ -11,12 +12,13 @@ int main()
         return 1;
     }
 
+    atexit(glfwTerminate);
+
     // initialize window
     GLFWwindow* window(glfwCreateWindow(640, 480, "Sample", NULL, NULL));
     if (window == NULL)
     {
         std::cerr << "Failed to initialize window" << std::endl;
-        glfwTerminate();
         return 1;
     }
 
