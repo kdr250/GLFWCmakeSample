@@ -1,41 +1,38 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 int main()
 {
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
+    // initialize GLFW
+    if (glfwInit() == GL_FALSE)
     {
-        glfwTerminate();
-        return -1;
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        return 1;
     }
 
-    /* Make the window's context current */
+    // initialize window
+    GLFWwindow* window(glfwCreateWindow(640, 480, "Sample", NULL, NULL));
+    if (window == NULL)
+    {
+        std::cerr << "Failed to initialize window" << std::endl;
+        glfwTerminate();
+        return 1;
+    }
+
     glfwMakeContextCurrent(window);
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
+    while (glfwWindowShouldClose(window) == GL_FALSE)
+    {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Swap front and back buffers */
+        // TODO: Not Yet Implemented
+
         glfwSwapBuffers(window);
-
-        /* Poll for and process events */
-        glfwPollEvents();
+        glfwWaitEvents();
     }
-
-    glfwTerminate();
 
     return 0;
 }
