@@ -37,6 +37,8 @@ int main()
         return 1;
     }
 
+    glfwSwapInterval(1);
+
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
     while (glfwWindowShouldClose(window) == GL_FALSE)
