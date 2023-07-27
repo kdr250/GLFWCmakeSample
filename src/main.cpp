@@ -24,6 +24,14 @@ int main()
 
     glfwMakeContextCurrent(window);
 
+    // initialize GLEW
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK)
+    {
+        std::cerr << "Failed to initialize GLEW" << std::endl;
+        return 1;
+    }
+
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
     while (glfwWindowShouldClose(window) == GL_FALSE)
