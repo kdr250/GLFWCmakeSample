@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include <fstream>
+#include <sstream>
 
 /**
  * @brief print the error log of shader compile
@@ -98,6 +100,54 @@ GLuint createProgram(const std::string& vsrc, const std::string& fsrc)
     return 0;
 }
 
+/**
+ * @brief read shader file
+ *
+ * @param name
+ * @param result
+ * @return true
+ * @return false
+ */
+bool readShaderSource(const std::string name, std::string& result)
+{
+    std::ifstream file(name);
+    std::stringstream ss;
+
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open file: " << name << std::endl;
+        file.close();
+        return false;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        ss << line << std::endl;
+    }
+
+    result = ss.str();
+    file.close();
+    return true;
+}
+
+/**
+ * @brief load shader program from file
+ *
+ * @param vert
+ * @param frag
+ * @return GLuint
+ */
+GLuint loadProgram(std::string vert, std::string frag)
+{
+    std::string vsrc;
+    const bool vstat(readShaderSource(vert, vsrc));
+
+    std::string fsrc;
+    const bool fstat(readShaderSource(frag, fsrc));
+
+    return vstat && fstat ? createProgram(vsrc, fsrc) : 0;
+}
+
 int main()
 {
     // initialize GLFW
@@ -136,23 +186,7 @@ int main()
 
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-    std::string vsrc =
-        R"(#version 150 core
-        in vec4 position;
-        void main()
-        {
-            gl_Position = position;
-        })";
-
-    std::string fsrc =
-        R"(#version 150 core
-        out vec4 fragment;
-        void main()
-        {
-            fragment = vec4(1.0, 0.0, 0.0, 1.0);
-        })";
-
-    const GLuint program(createProgram(vsrc, fsrc));
+    const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
 
     while (glfwWindowShouldClose(window) == GL_FALSE)
     {
