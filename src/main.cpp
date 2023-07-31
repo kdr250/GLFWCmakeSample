@@ -6,6 +6,17 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <memory>
+#include "Shape.h"
+
+/** 矩形の頂点の位置 */
+constexpr Object::Vertex rectangleVertex[] =
+{
+    {-0.5f, -0.5f },
+    { 0.5f, -0.5f },
+    { 0.5f, 0.5f },
+    { -0.5f, 0.5f }
+};
 
 /**
  * @brief print the error log of shader compile
@@ -188,13 +199,17 @@ int main()
 
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
 
+    // 図形を作成する
+    std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(2, 4, rectangleVertex);
+
     while (glfwWindowShouldClose(window) == GL_FALSE)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(program);
 
-        // TODO: Not Yet Implemented
+        // 図形を描画
+        shape->draw();
 
         glfwSwapBuffers(window);
         glfwWaitEvents();
