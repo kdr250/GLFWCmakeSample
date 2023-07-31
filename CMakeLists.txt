@@ -17,7 +17,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(GLFW glew)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 include_directories(include)
