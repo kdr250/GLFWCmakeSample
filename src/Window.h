@@ -18,9 +18,13 @@ class Window
     /** ワールド座標系に対するデバイス座標系の拡大率 */
     GLfloat scale;
 
+    /** 図形の正規化デバイス座標系上での位置 */
+    GLfloat location[2];
+
 public:
     Window(int width = 640, int height = 480, std::string title = "Hello") :
-        window(glfwCreateWindow(width, height, title.c_str(), NULL, NULL)), scale(100.0f)
+        window(glfwCreateWindow(width, height, title.c_str(), NULL, NULL)),
+        scale(100.0f), location {0.0f, 0.0f}
     {
         if (window == NULL)
         {
@@ -56,6 +60,12 @@ public:
     {
         glfwWaitEvents();
 
+        double x, y;
+        glfwGetCursorPos(window, &x, &y);
+
+        location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
+        location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+
         return !glfwWindowShouldClose(window);
     }
 
@@ -87,5 +97,10 @@ public:
     GLfloat getScale() const
     {
         return scale;
+    }
+
+    const GLfloat* getLocation() const
+    {
+        return location;
     }
 };

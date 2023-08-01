@@ -185,6 +185,7 @@ int main()
 
     const GLint sizeLocation(glGetUniformLocation(program, "size"));
     const GLint scaleLocation(glGetUniformLocation(program, "scale"));
+    const GLint location(glGetUniformLocation(program, "location"));
 
     // 図形を作成する
     std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(2, 4, rectangleVertex);
@@ -197,6 +198,7 @@ int main()
 
         glUniform2fv(sizeLocation, 1, window.getSize());
         glUniform1f(scaleLocation, window.getScale());
+        glUniform2fv(location, 1, window.getLocation());
 
         // 図形を描画
         shape->draw();
