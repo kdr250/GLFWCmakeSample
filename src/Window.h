@@ -72,7 +72,7 @@ public:
             location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
         }
 
-        return !glfwWindowShouldClose(window);
+        return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
     }
 
     void swapBuffers() const
