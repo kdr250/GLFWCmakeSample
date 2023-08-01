@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "Matrix.h"
 #include "Shape.h"
 #include "Window.h"
 
@@ -183,9 +184,7 @@ int main()
 
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
 
-    const GLint sizeLocation(glGetUniformLocation(program, "size"));
-    const GLint scaleLocation(glGetUniformLocation(program, "scale"));
-    const GLint location(glGetUniformLocation(program, "location"));
+    const GLint modelLocation(glGetUniformLocation(program, "model"));
 
     // 図形を作成する
     std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(2, 4, rectangleVertex);
@@ -196,9 +195,20 @@ int main()
 
         glUseProgram(program);
 
-        glUniform2fv(sizeLocation, 1, window.getSize());
-        glUniform1f(scaleLocation, window.getScale());
-        glUniform2fv(location, 1, window.getLocation());
+        // 拡大縮小の変換行列を求める
+        const GLfloat* size(window.getSize());
+        const GLfloat scale(window.getScale() * 2.0f);
+        const Matrix scaling(Matrix::scale(scale / size[0], scale / size[1], 1.0f));
+
+        // 平行移動の変換行列を求める
+        const GLfloat* const position(window.getLocation());
+        const Matrix translation(Matrix::translate(position[0], position[1], 0.0f));
+
+        // モデルの変換行列を求める
+        const Matrix model(translation * scaling);
+
+        // uniform変数に値を設定する
+        glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model.data());
 
         // 図形を描画
         shape->draw();
