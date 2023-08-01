@@ -34,4 +34,25 @@ public:
     {
         return matrix[i];
     }
+
+    /** 変換行列の配列を返す */
+    const GLfloat* data() const
+    {
+        return matrix;
+    }
+
+    /** 単位行列を設定する */
+    void loadIdentity()
+    {
+        std::fill(matrix, matrix + 16, 0.0f);
+        matrix[0] = matrix[5] = matrix[10] = matrix[15] = 1.0f;
+    }
+
+    /** 単位行列を作成する */
+    static Matrix identity()
+    {
+        Matrix m;
+        m.loadIdentity();
+        return m;
+    }
 };
