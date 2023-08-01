@@ -55,4 +55,15 @@ public:
         m.loadIdentity();
         return m;
     }
+
+    /** (x, y, z)だけ平行移動する変換行列を作成する */
+    static Matrix translate(GLfloat x, GLfloat y, GLfloat z)
+    {
+        Matrix m;
+        m.loadIdentity();
+        m[12] = x;
+        m[13] = y;
+        m[14] = z;
+        return m;
+    }
 };
