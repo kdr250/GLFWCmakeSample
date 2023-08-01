@@ -1,6 +1,7 @@
 #pragma once
 #include <gl/glew.h>
 #include <algorithm>
+#include <cmath>
 
 /**
  * 変換行列のクラス
@@ -75,6 +76,32 @@ public:
         m[0]  = x;
         m[5]  = y;
         m[10] = z;
+        return m;
+    }
+
+    /** (x, y, z)を軸に a 回転する変換行列を作成する */
+    static Matrix rotate(GLfloat a, GLfloat x, GLfloat y, GLfloat z)
+    {
+        Matrix m;
+        const GLfloat d(sqrt(x * x + y * y + z * z));
+        if (d > 0.0f)
+        {
+            const GLfloat l(x / d), m(y / d), n(z / d);
+            const GLfloat l2(l * l), m2(m * m), n2(n * n);
+            const GLfloat lm(l * m), mn(m * m), nl(n * l);
+            const GLfloat c(std::cos(a)), c1(1.0f - c), s(std::sin(a));
+
+            m.loadIdentity();
+            m[0]  = (1.0f - l2) * c + 12;
+            m[1]  = lm * c1 + n * s;
+            m[2]  = nl * c1 - m * s;
+            m[4]  = lm * c1 - n * s;
+            m[5]  = (1.0f - m2) * c + m2;
+            m[6]  = mn * c1 + l * s;
+            m[8]  = nl * c1 + m * s;
+            m[9]  = mn * c1 - l * s;
+            m[10] = (1.0f - n2) * c + n2;
+        }
         return m;
     }
 };
