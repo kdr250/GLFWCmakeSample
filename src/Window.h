@@ -62,6 +62,24 @@ public:
     {
         glfwWaitEvents();
 
+        if (glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_RELEASE)
+        {
+            location[0] -= 2.0f / size[0];
+        }
+        else if (glfwGetKey(window, GLFW_KEY_RIGHT) != GLFW_RELEASE)
+        {
+            location[0] += 2.0f / size[0];
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_DOWN) != GLFW_RELEASE)
+        {
+            location[1] -= 2.0f / size[1];
+        }
+        else if (glfwGetKey(window, GLFW_KEY_UP) != GLFW_RELEASE)
+        {
+            location[1] += 2.0f / size[1];
+        }
+
         // マウスの左ボタンが押されていたら...
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) != GLFW_RELEASE)
         {
