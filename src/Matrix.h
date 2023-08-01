@@ -36,6 +36,20 @@ public:
         return matrix[i];
     }
 
+    /** 乗算 */
+    Matrix operator*(const Matrix& other) const
+    {
+        Matrix m;
+        for (int i = 0; i < 16; i++)
+        {
+            int j(i & 3), k(i & ~3);
+
+            m[i] = matrix[0 + j] * m[k + 0] + matrix[4 + j] * m[k + 1] + matrix[8 + j] * m[k + 2]
+                   + matrix[12 + j] * m[k + 3];
+        }
+        return m;
+    }
+
     /** 変換行列の配列を返す */
     const GLfloat* data() const
     {
