@@ -21,10 +21,13 @@ class Window
     /** 図形の正規化デバイス座標系上での位置 */
     GLfloat location[2];
 
+    /** キーボードの状態 */
+    int keyStatus;
+
 public:
     Window(int width = 640, int height = 480, std::string title = "Hello") :
         window(glfwCreateWindow(width, height, title.c_str(), NULL, NULL)),
-        scale(100.0f), location {0.0f, 0.0f}
+        scale(100.0f), location {0.0f, 0.0f}, keyStatus(GLFW_RELEASE)
     {
         if (window == NULL)
         {
@@ -44,6 +47,8 @@ public:
 
         glfwSwapInterval(1);
 
+        glfwSetKeyCallback(window, keyboard);
+
         glfwSetScrollCallback(window, wheel);
 
         glfwSetWindowUserPointer(window, this);
@@ -60,7 +65,14 @@ public:
 
     explicit operator bool()
     {
-        glfwPollEvents();
+        if (keyStatus == GLFW_RELEASE)
+        {
+            glfwWaitEvents();
+        }
+        else
+        {
+            glfwPollEvents();
+        }
 
         if (glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_RELEASE)
         {
@@ -119,6 +131,15 @@ public:
         if (instance != NULL)
         {
             instance->scale += static_cast<GLfloat>(y);
+        }
+    }
+
+    static void keyboard(GLFWwindow* window, int key, int scancode, int action, int mode)
+    {
+        Window* instance(static_cast<Window*>(glfwGetWindowUserPointer(window)));
+        if (instance != NULL)
+        {
+            instance->keyStatus = action;
         }
     }
 
