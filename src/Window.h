@@ -9,7 +9,11 @@
  */
 class Window
 {
+    /** ウィンドウ */
     GLFWwindow* window;
+
+    /** 縦横比(アスペクト比) */
+    GLfloat aspect;
 
 public:
     Window(int width = 640, int height = 480, std::string title = "Hello") :
@@ -32,6 +36,8 @@ public:
         }
 
         glfwSwapInterval(1);
+
+        glfwSetWindowUserPointer(window, this);
 
         glfwSetWindowSizeCallback(window, resize);
 
@@ -61,5 +67,16 @@ public:
         glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
 
         glViewport(0, 0, fbWidth, fbHeight);
+
+        Window* instance(static_cast<Window*>(glfwGetWindowUserPointer(window)));
+        if (instance != NULL)
+        {
+            instance->aspect = static_cast<GLfloat>(width / static_cast<GLfloat>(height));
+        }
+    }
+
+    GLfloat getAspect() const
+    {
+        return aspect;
     }
 };

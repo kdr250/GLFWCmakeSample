@@ -183,6 +183,8 @@ int main()
 
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
 
+    const GLint aspectLocation(glGetUniformLocation(program, "aspect"));
+
     // 図形を作成する
     std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(2, 4, rectangleVertex);
 
@@ -191,6 +193,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(program);
+
+        glUniform1f(aspectLocation, window.getAspect());
 
         // 図形を描画
         shape->draw();
