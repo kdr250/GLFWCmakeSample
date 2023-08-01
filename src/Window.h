@@ -60,11 +60,15 @@ public:
     {
         glfwWaitEvents();
 
-        double x, y;
-        glfwGetCursorPos(window, &x, &y);
+        // マウスの左ボタンが押されていたら...
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) != GLFW_RELEASE)
+        {
+            double x, y;
+            glfwGetCursorPos(window, &x, &y);
 
-        location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
-        location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+            location[0] = static_cast<GLfloat>(x) * 2.0f / size[0] - 1.0f;
+            location[1] = 1.0f - static_cast<GLfloat>(y) * 2.0f / size[1];
+        }
 
         return !glfwWindowShouldClose(window);
     }
