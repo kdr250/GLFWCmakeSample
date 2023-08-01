@@ -1,22 +1,19 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <cstdlib>
-#include <vector>
-#include <string>
 #include <fstream>
-#include <sstream>
+#include <iostream>
 #include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 #include "Shape.h"
 
 /** 矩形の頂点の位置 */
-constexpr Object::Vertex rectangleVertex[] =
-{
-    {-0.5f, -0.5f },
-    { 0.5f, -0.5f },
-    { 0.5f, 0.5f },
-    { -0.5f, 0.5f }
-};
+constexpr Object::Vertex rectangleVertex[] = {{-0.5f, -0.5f},
+                                              {0.5f, -0.5f},
+                                              {0.5f, 0.5f},
+                                              {-0.5f, 0.5f}};
 
 /**
  * @brief print the error log of shader compile
@@ -29,7 +26,8 @@ GLboolean printShaderInfoLog(GLuint shader, const char* str)
 {
     GLint status;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-    if (status == GL_FALSE) std::cerr << "Compile Error in " << str << std::endl;
+    if (status == GL_FALSE)
+        std::cerr << "Compile Error in " << str << std::endl;
 
     GLsizei bufSize;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &bufSize);
@@ -53,7 +51,8 @@ GLboolean printProgramInfoLog(GLuint program)
 {
     GLint status;
     glGetProgramiv(program, GL_LINK_STATUS, &status);
-    if (status == GL_FALSE) std::cerr << "Link Error." << std::endl;
+    if (status == GL_FALSE)
+        std::cerr << "Link Error." << std::endl;
 
     GLsizei bufSize;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufSize);
@@ -132,7 +131,8 @@ bool readShaderSource(const std::string name, std::string& result)
     }
 
     std::string line;
-    while (std::getline(file, line)) {
+    while (std::getline(file, line))
+    {
         ss << line << std::endl;
     }
 
@@ -196,6 +196,8 @@ int main()
     glfwSwapInterval(1);
 
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
+    glViewport(100, 50, 300, 300);
 
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
 
