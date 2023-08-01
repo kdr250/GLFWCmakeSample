@@ -12,12 +12,15 @@ class Window
     /** ウィンドウ */
     GLFWwindow* window;
 
-    /** 縦横比(アスペクト比) */
-    GLfloat aspect;
+    /** ウィンドウのサイズ */
+    GLfloat size[2];
+
+    /** ワールド座標系に対するデバイス座標系の拡大率 */
+    GLfloat scale;
 
 public:
     Window(int width = 640, int height = 480, std::string title = "Hello") :
-        window(glfwCreateWindow(width, height, title.c_str(), NULL, NULL))
+        window(glfwCreateWindow(width, height, title.c_str(), NULL, NULL)), scale(100.0f)
     {
         if (window == NULL)
         {
@@ -71,12 +74,18 @@ public:
         Window* instance(static_cast<Window*>(glfwGetWindowUserPointer(window)));
         if (instance != NULL)
         {
-            instance->aspect = static_cast<GLfloat>(width / static_cast<GLfloat>(height));
+            instance->size[0] = static_cast<GLfloat>(width);
+            instance->size[1] = static_cast<GLfloat>(height);
         }
     }
 
-    GLfloat getAspect() const
+    const GLfloat* getSize() const
     {
-        return aspect;
+        return size;
+    }
+
+    GLfloat getScale() const
+    {
+        return scale;
     }
 };
