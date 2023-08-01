@@ -8,12 +8,13 @@
 #include <string>
 #include <vector>
 #include "Shape.h"
+#include "Window.h"
 
 /** 矩形の頂点の位置 */
 constexpr Object::Vertex rectangleVertex[] = {{-0.5f, -0.5f},
-                                              {0.5f, -0.5f},
-                                              {0.5f, 0.5f},
-                                              {-0.5f, 0.5f}};
+                                              {1.5f, -0.5f},
+                                              {1.5f, 1.5f},
+                                              {-0.5f, 1.5f}};
 
 /**
  * @brief print the error log of shader compile
@@ -176,35 +177,16 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // initialize window
-    GLFWwindow* window(glfwCreateWindow(640, 480, "Sample", NULL, NULL));
-    if (window == NULL)
-    {
-        std::cerr << "Failed to initialize window" << std::endl;
-        return 1;
-    }
-
-    glfwMakeContextCurrent(window);
-
-    // initialize GLEW
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK)
-    {
-        std::cerr << "Failed to initialize GLEW" << std::endl;
-        return 1;
-    }
-
-    glfwSwapInterval(1);
+    Window window;
 
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-
-    glViewport(100, 50, 300, 300);
 
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
 
     // 図形を作成する
     std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(2, 4, rectangleVertex);
 
-    while (glfwWindowShouldClose(window) == GL_FALSE)
+    while (window)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -213,8 +195,7 @@ int main()
         // 図形を描画
         shape->draw();
 
-        glfwSwapBuffers(window);
-        glfwWaitEvents();
+        window.swapBuffers();
     }
 
     return 0;
