@@ -178,4 +178,26 @@ public:
         // 視点の平行移動の変換行列に視線の回転の変換行列を乗じる
         return rv * tv;
     }
+
+    /** 直交投影変換行列を作成する */
+    static Matrix orthogonal(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
+    {
+        Matrix m;
+        const GLfloat dx(right - left);
+        const GLfloat dy(top - bottom);
+        const GLfloat dz(zFar - zNear);
+
+        if (dx != 0.0f && dy != 0.0f && dz != 0.0f)
+        {
+            m.loadIdentity();
+            m[0] = 2.0f / dx;
+            m[5] = 2.0f / dy;
+            m[10] = -2.0f / dz;
+            m[12] = -(right + left) / dx;
+            m[13] = -(top + bottom) / dy;
+            m[14] = -(zFar + zNear) / dz;
+        }
+
+        return m;
+    }
 };
