@@ -183,8 +183,7 @@ int main()
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
-
-    const GLint modelViewLocation(glGetUniformLocation(program, "modelView"));
+    const GLint projectionLocation(glGetUniformLocation(program, "projection"));
 
     // 図形を作成する
     std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(2, 4, rectangleVertex);
@@ -198,20 +197,23 @@ int main()
         // 拡大縮小の変換行列を求める
         const GLfloat* size(window.getSize());
         const GLfloat scale(window.getScale() * 2.0f);
-        const Matrix scaling(Matrix::scale(scale / size[0], scale / size[1], 1.0f));
+        const GLfloat w(size[0] / scale), h(size[1] / scale);
+        const Matrix projection(Matrix::orthogonal(-w, w, -h, h, 1.0f, 10.0f));
 
         // 平行移動の変換行列を求める
         const GLfloat* const position(window.getLocation());
         const Matrix translation(Matrix::translate(position[0], position[1], 0.0f));
 
         // モデルの変換行列を求める
-        const Matrix model(translation * scaling);
+        const GLfloat* location(window.getLocation());
+        const Matrix model(Matrix::translate(location[0], location[1], 0.0f));
 
         // ビュー変換行列を求める
-        const Matrix view(Matrix::lookAt(0.0f, 0.0f, 0.0f, -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f));
+        const Matrix view(Matrix::lookAt(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));
         // モデルビュー変換行列を求める
         const Matrix modelView(view * model);
         // uniform 変数に値を設定する
+        glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.data());
         glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, modelView.data());
 
         // 図形を描画
