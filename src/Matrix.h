@@ -200,4 +200,28 @@ public:
 
         return m;
     }
+
+    /** 透視投影変換行列を作成する */
+    static Matrix frustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
+    {
+        Matrix m;
+        const GLfloat dx(right - left);
+        const GLfloat dy(top - bottom);
+        const GLfloat dz(zFar - zNear);
+
+        if (dx != 0.0f && dy != 0.0f && dz != 0.0f)
+        {
+            m.loadIdentity();
+            m[0] = 2.0f * zNear / dx;
+            m[5] = 2.0f * zNear / dy;
+            m[8] = (right + left) / dx;
+            m[9] = (top + bottom) / dy;
+            m[10] = -(zFar + zNear) / dz;
+            m[11] = -1.0f;
+            m[14] = -2.0f * zFar * zNear / dz;
+            m[15] = 0.0f;
+        }
+
+        return m;
+    }
 };
