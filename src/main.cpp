@@ -195,15 +195,11 @@ int main()
 
         glUseProgram(program);
 
-        // 拡大縮小の変換行列を求める
+        // 透視投影変換行列を求める
         const GLfloat* size(window.getSize());
         const GLfloat scale(window.getScale() * 2.0f);
         const GLfloat w(size[0] / scale), h(size[1] / scale);
-        const Matrix projection(Matrix::orthogonal(-w, w, -h, h, 1.0f, 10.0f));
-
-        // 平行移動の変換行列を求める
-        const GLfloat* const position(window.getLocation());
-        const Matrix translation(Matrix::translate(position[0], position[1], 0.0f));
+        const Matrix projection(Matrix::frustum(-w, w, -h, h, 1.0f, 10.0f));
 
         // モデルの変換行列を求める
         const GLfloat* location(window.getLocation());
