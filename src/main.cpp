@@ -11,11 +11,22 @@
 #include "Shape.h"
 #include "Window.h"
 
-/** 矩形の頂点の位置 */
-constexpr Object::Vertex rectangleVertex[] = {{-0.5f, -0.5f},
-                                              {1.5f, -0.5f},
-                                              {1.5f, 1.5f},
-                                              {-0.5f, 1.5f}};
+/** 八面体の頂点の位置 */
+constexpr Object::Vertex octahedronVertex[] =
+{
+    { 0.0f, 1.0f, 0.0f },
+    { -1.0f, 0.0f, 0.0f },
+    { 0.0f, -1.0f, 0.0f },
+    { 1.0f, 0.0f, 0.0f },
+    { 0.0f, 1.0f, 0.0f },
+    { 0.0f, 0.0f, 1.0f },
+    { 0.0f, -1.0f, 0.0f },
+    { 0.0f, 0.0f, -1.0f },
+    { -1.0f, 0.0f, 0.0f },
+    { 0.0f, 0.0f, 1.0f },
+    { 1.0f, 0.0f, 0.0f },
+    { 0.0f, 0.0f, -1.0f }
+};
 
 /**
  * @brief print the error log of shader compile
@@ -187,7 +198,7 @@ int main()
     const GLint modelViewLocation(glGetUniformLocation(program, "modelView"));
 
     // 図形を作成する
-    std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(2, 4, rectangleVertex);
+    std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(3, 12, octahedronVertex);
 
     while (window)
     {
