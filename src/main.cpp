@@ -184,6 +184,7 @@ int main()
 
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
     const GLint projectionLocation(glGetUniformLocation(program, "projection"));
+    const GLint modelViewLocation(glGetUniformLocation(program, "modelView"));
 
     // 図形を作成する
     std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(2, 4, rectangleVertex);
