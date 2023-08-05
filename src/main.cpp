@@ -9,23 +9,35 @@
 #include <vector>
 #include "Matrix.h"
 #include "Shape.h"
+#include "ShapeIndex.h"
 #include "Window.h"
 
-/** 八面体の頂点の位置 */
-constexpr Object::Vertex octahedronVertex[] =
-{
-    { 0.0f, 1.0f, 0.0f },
-    { -1.0f, 0.0f, 0.0f },
-    { 0.0f, -1.0f, 0.0f },
-    { 1.0f, 0.0f, 0.0f },
-    { 0.0f, 1.0f, 0.0f },
-    { 0.0f, 0.0f, 1.0f },
-    { 0.0f, -1.0f, 0.0f },
-    { 0.0f, 0.0f, -1.0f },
-    { -1.0f, 0.0f, 0.0f },
-    { 0.0f, 0.0f, 1.0f },
-    { 1.0f, 0.0f, 0.0f },
-    { 0.0f, 0.0f, -1.0f }
+/** 六面体の頂点の位置 */
+constexpr Object::Vertex cubeVertex[] = {
+    {-1.0f, -1.0f, -1.0f},  // (0)
+    {-1.0f, -1.0f, 1.0f},   // (1)
+    {-1.0f, 1.0f, 1.0f},    // (2)
+    {-1.0f, 1.0f, -1.0f},   // (3)
+    {1.0f, 1.0f, -1.0f},    // (4)
+    {1.0f, -1.0f, -1.0f},   // (5)
+    {1.0f, -1.0f, 1.0f},    // (6)
+    {1.0f, 1.0f, 1.0f}      // (7)
+};
+
+/** 六面体の稜線の両端点のインデックス */
+constexpr GLuint wireCubeIndex[] = {
+    1, 0,  // (a)
+    2, 7,  // (b)
+    3, 0,  // (c)
+    4, 7,  // (d)
+    5, 0,  // (e)
+    6, 7,  // (f)
+    1, 2,  // (g)
+    2, 3,  // (h)
+    3, 4,  // (i)
+    4, 5,  // (j)
+    5, 6,  // (k)
+    6, 1   // (l)
 };
 
 /**
@@ -198,7 +210,8 @@ int main()
     const GLint modelViewLocation(glGetUniformLocation(program, "modelView"));
 
     // 図形を作成する
-    std::unique_ptr<const Shape> shape = std::make_unique<const Shape>(3, 12, octahedronVertex);
+    std::unique_ptr<const Shape> shape =
+        std::make_unique<const ShapeIndex>(3, 12, cubeVertex, 24, wireCubeIndex);
 
     while (window)
     {
