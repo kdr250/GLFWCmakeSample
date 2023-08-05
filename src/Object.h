@@ -10,6 +10,8 @@ class Object
     GLuint vao;
     /** 頂点バッファオブジェクト名 */
     GLuint vbo;
+    /** インデックスの頂点バッファオブジェクト */
+    GLuint ibo;
 
 public:
     /**
@@ -27,8 +29,14 @@ public:
      * @param size 頂点の位置の次元
      * @param vertexcount 頂点の数
      * @param vertex 頂点属性を格納した配列
+     * @param indexcount 頂点のインデックスの要素数
+     * @param index 頂点のインデックスを格納した配列
      */
-    Object(GLint size, GLsizei vertexcount, const Vertex* vertex)
+    Object(GLint size,
+           GLsizei vertexcount,
+           const Vertex* vertex,
+           GLsizei indexcount  = 0,
+           const GLuint* index = NULL)
     {
         // 頂点配列オブジェクト
         glGenVertexArrays(1, &vao);
@@ -42,12 +50,18 @@ public:
         // 結合されている頂点バッファオブジェクトをin変数から参照できるようにする
         glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(0);
+
+        // インデックスの頂点バッファオブジェクト
+        glGenBuffers(1, &ibo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexcount * sizeof(GLuint), index, GL_STATIC_DRAW);
     }
 
     virtual ~Object()
     {
         glDeleteVertexArrays(1, &vao);
         glDeleteBuffers(1, &vbo);
+        glDeleteBuffers(1, &ibo);
     }
 
     /** 頂点配列オブジェクトを結合する */
