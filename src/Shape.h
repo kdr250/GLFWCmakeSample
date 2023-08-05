@@ -21,10 +21,18 @@ public:
      * @param size 頂点の位置の次元
      * @param vertexcount 頂点の数
      * @param vertex 頂点属性を格納した配列
+     * @param indexcount 頂点のインデックスの要素数
+     * @param index 頂点のインデックスを格納した配列
      */
-    Shape(GLint size, GLsizei vertexcount, const Object::Vertex* vertex)
-        : object(new Object(size, vertexcount, vertex)), vertexcount(vertexcount)
-    {}
+    Shape(GLint size,
+          GLsizei vertexcount,
+          const Object::Vertex* vertex,
+          GLsizei indexcount  = 0,
+          const GLuint* index = NULL) :
+        object(new Object(size, vertexcount, vertex, indexcount, index)),
+        vertexcount(vertexcount)
+    {
+    }
 
     /** 描画する */
     void draw() const
