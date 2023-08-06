@@ -240,6 +240,11 @@ int main()
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
 
+    // デプスバッファを有効にする
+    glClearDepth(1.0);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
+
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
     const GLint projectionLocation(glGetUniformLocation(program, "projection"));
     const GLint modelViewLocation(glGetUniformLocation(program, "modelView"));
@@ -252,7 +257,7 @@ int main()
 
     while (window)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(program);
 
