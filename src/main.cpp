@@ -249,6 +249,7 @@ int main()
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
     const GLint projectionLocation(glGetUniformLocation(program, "projection"));
     const GLint modelViewLocation(glGetUniformLocation(program, "modelView"));
+    const GLint normalMatrixLocation(glGetUniformLocation(program, "normalMatrix"));
 
     // 図形を作成する
     std::unique_ptr<const Shape> shape =
@@ -275,19 +276,34 @@ int main()
 
         // ビュー変換行列を求める
         const Matrix view(Matrix::lookAt(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));
+
+        // 法線ベクトルの変換行列の格納先
+        GLfloat normalMatrix[9];
+
         // モデルビュー変換行列を求める
         const Matrix modelView(view * model);
+
+        // 法線ベクトルの変換行列を求める
+        modelView.getNormalMatrix(normalMatrix);
+
         // uniform 変数に値を設定する
         glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.data());
         glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, modelView.data());
+        glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, normalMatrix);
 
         // 図形を描画
         shape->draw();
 
         // 二つ目のモデルビュー変換行列を求める
         const Matrix modelview1(modelView * Matrix::translate(0.0f, 0.0f, 3.0f));
+
+        // 二つ目の法線ベクトルの変換行列を求める
+        modelview1.getNormalMatrix(normalMatrix);
+
         // uniform 変数に値を設定する
         glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, modelview1.data());
+        glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, normalMatrix);
+
         // 二つ目の図形を描画する
         shape->draw();
 

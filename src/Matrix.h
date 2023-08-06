@@ -180,7 +180,12 @@ public:
     }
 
     /** 直交投影変換行列を作成する */
-    static Matrix orthogonal(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
+    static Matrix orthogonal(GLfloat left,
+                             GLfloat right,
+                             GLfloat bottom,
+                             GLfloat top,
+                             GLfloat zNear,
+                             GLfloat zFar)
     {
         Matrix m;
         const GLfloat dx(right - left);
@@ -190,8 +195,8 @@ public:
         if (dx != 0.0f && dy != 0.0f && dz != 0.0f)
         {
             m.loadIdentity();
-            m[0] = 2.0f / dx;
-            m[5] = 2.0f / dy;
+            m[0]  = 2.0f / dx;
+            m[5]  = 2.0f / dy;
             m[10] = -2.0f / dz;
             m[12] = -(right + left) / dx;
             m[13] = -(top + bottom) / dy;
@@ -202,7 +207,12 @@ public:
     }
 
     /** 透視投影変換行列を作成する */
-    static Matrix frustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
+    static Matrix frustum(GLfloat left,
+                          GLfloat right,
+                          GLfloat bottom,
+                          GLfloat top,
+                          GLfloat zNear,
+                          GLfloat zFar)
     {
         Matrix m;
         const GLfloat dx(right - left);
@@ -212,10 +222,10 @@ public:
         if (dx != 0.0f && dy != 0.0f && dz != 0.0f)
         {
             m.loadIdentity();
-            m[0] = 2.0f * zNear / dx;
-            m[5] = 2.0f * zNear / dy;
-            m[8] = (right + left) / dx;
-            m[9] = (top + bottom) / dy;
+            m[0]  = 2.0f * zNear / dx;
+            m[5]  = 2.0f * zNear / dy;
+            m[8]  = (right + left) / dx;
+            m[9]  = (top + bottom) / dy;
             m[10] = -(zFar + zNear) / dz;
             m[11] = -1.0f;
             m[14] = -2.0f * zFar * zNear / dz;
@@ -234,8 +244,8 @@ public:
         if (dz != 0.0f)
         {
             m.loadIdentity();
-            m[5] = 1.0f / std::tan(fovy * 0.5f);
-            m[0] = m[5] / aspect;
+            m[5]  = 1.0f / std::tan(fovy * 0.5f);
+            m[0]  = m[5] / aspect;
             m[10] = -(zFar + zNear) / dz;
             m[11] = -1.0f;
             m[14] = -2.0f * zFar * zNear / dz;
@@ -243,5 +253,19 @@ public:
         }
 
         return m;
+    }
+
+    /** 法線ベクトルの変換行列を求める */
+    void getNormalMatrix(GLfloat* m) const
+    {
+        m[0] = matrix[5] * matrix[10] - matrix[6] * matrix[9];
+        m[1] = matrix[6] * matrix[8] - matrix[4] * matrix[10];
+        m[2] = matrix[4] * matrix[9] - matrix[5] * matrix[8];
+        m[3] = matrix[9] * matrix[2] - matrix[10] * matrix[1];
+        m[4] = matrix[10] * matrix[0] - matrix[8] * matrix[2];
+        m[5] = matrix[8] * matrix[1] - matrix[9] * matrix[0];
+        m[6] = matrix[1] * matrix[6] - matrix[2] * matrix[5];
+        m[7] = matrix[2] * matrix[4] - matrix[0] * matrix[6];
+        m[8] = matrix[0] * matrix[5] - matrix[1] * matrix[4];
     }
 };
