@@ -243,6 +243,8 @@ int main()
     std::unique_ptr<const Shape> shape =
         std::make_unique<const SolidShapeIndex>(3, 36, solidCubeVertex, 36, solidCubeIndex);
 
+    glfwSetTime(0.0);
+
     while (window)
     {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -257,7 +259,8 @@ int main()
 
         // モデルの変換行列を求める
         const GLfloat* location(window.getLocation());
-        const Matrix model(Matrix::translate(location[0], location[1], 0.0f));
+        const Matrix r(Matrix::rotate(static_cast<GLfloat>(glfwGetTime()), 0.0f, 1.0f, 0.0f));
+        const Matrix model(Matrix::translate(location[0], location[1], 0.0f) * r);
 
         // ビュー変換行列を求める
         const Matrix view(Matrix::lookAt(3.0f, 4.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f));

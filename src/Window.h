@@ -65,14 +65,7 @@ public:
 
     explicit operator bool()
     {
-        if (keyStatus == GLFW_RELEASE)
-        {
-            glfwWaitEvents();
-        }
-        else
-        {
-            glfwPollEvents();
-        }
+        glfwPollEvents();
 
         if (glfwGetKey(window, GLFW_KEY_LEFT) != GLFW_RELEASE)
         {
