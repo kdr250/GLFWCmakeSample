@@ -10,6 +10,7 @@
 #include "Matrix.h"
 #include "Shape.h"
 #include "ShapeIndex.h"
+#include "SolidShapeIndex.h"
 #include "Window.h"
 
 /** 六面体の頂点の位置と色 */
@@ -24,20 +25,14 @@ constexpr Object::Vertex cubeVertex[] = {
     {1.0f, 1.0f, 1.0f, 0.8f, 0.8f, 0.8f}      // (7)
 };
 
-/** 六面体の稜線の両端点のインデックス */
-constexpr GLuint wireCubeIndex[] = {
-    1, 0,  // (a)
-    2, 7,  // (b)
-    3, 0,  // (c)
-    4, 7,  // (d)
-    5, 0,  // (e)
-    6, 7,  // (f)
-    1, 2,  // (g)
-    2, 3,  // (h)
-    3, 4,  // (i)
-    4, 5,  // (j)
-    5, 6,  // (k)
-    6, 1   // (l)
+/** 六面体の面を塗りつぶす三角形の頂点のインデックス */
+constexpr GLuint solidCubeIndex[] = {
+    0, 1, 2, 0, 2, 3,  // 左
+    0, 3, 4, 0, 4, 5,  // 裏
+    0, 5, 6, 0, 6, 1,  // 下
+    7, 6, 5, 7, 5, 4,  // 右
+    7, 4, 3, 7, 3, 2,  // 上
+    7, 2, 1, 7, 1, 6   // 前
 };
 
 /**
@@ -212,7 +207,7 @@ int main()
 
     // 図形を作成する
     std::unique_ptr<const Shape> shape =
-        std::make_unique<const ShapeIndex>(3, 12, cubeVertex, 24, wireCubeIndex);
+        std::make_unique<const SolidShapeIndex>(3, 12, cubeVertex, 36, solidCubeIndex);
 
     while (window)
     {
