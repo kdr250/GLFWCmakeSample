@@ -242,7 +242,7 @@ int main()
 
     // 図形を作成する
     std::unique_ptr<const Shape> shape =
-        std::make_unique<const SolidShapeIndex>(3, 24, solidCubeVertex, 36, solidCubeIndex);
+        std::make_unique<const SolidShapeIndex>(3, 36, solidCubeVertex, 36, solidCubeIndex);
 
     while (window)
     {
