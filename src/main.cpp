@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <cmath>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -251,9 +252,57 @@ int main()
     const GLint modelViewLocation(glGetUniformLocation(program, "modelView"));
     const GLint normalMatrixLocation(glGetUniformLocation(program, "normalMatrix"));
 
+    // 球の分割数
+    const int slices = 16, stacks = 8;
+
+    // 頂点属性を作る
+    std::vector<Object::Vertex> solidSphereVertex;
+    for (int j = 0; j <= stacks; j++)
+    {
+        const float t = static_cast<float>(j) / static_cast<float>(stacks);
+        const float y = std::cos(3.141593f * t), r = std::sin(3.141593f * t);
+        for (int i = 0; i <= slices; i++)
+        {
+            const float s = static_cast<float>(i) / static_cast<float>(slices);
+            const float z = r * std::cos(6.283185f * s), x = r * std::sin(6.283185f * s);
+
+            // 頂点属性
+            const Object::Vertex v = {x, y, z, x, y, x};
+            // 頂点属性を追加する
+            solidSphereVertex.push_back(v);
+        }
+    }
+
+    // インデックスを作る
+    std::vector<GLuint> solidSphereIndex;
+    for (int j = 0; j < stacks; j++)
+    {
+        const int k = (slices + 1) * j;
+        for (int i = 0; i < slices; ++i)
+        {
+            // 頂点のインデックス
+            const GLuint k0(k + i);
+            const GLuint k1(k0 + 1);
+            const GLuint k2(k1 + slices);
+            const GLuint k3(k2 + 1);
+            // 左下の三角形
+            solidSphereIndex.push_back(k0);
+            solidSphereIndex.push_back(k2);
+            solidSphereIndex.push_back(k3);
+            // 右上の三角形
+            solidSphereIndex.push_back(k0);
+            solidSphereIndex.push_back(k3);
+            solidSphereIndex.push_back(k1);
+        }
+    }
+
     // 図形を作成する
     std::unique_ptr<const Shape> shape =
-        std::make_unique<const SolidShapeIndex>(3, 36, solidCubeVertex, 36, solidCubeIndex);
+        std::make_unique<const SolidShapeIndex>(3,
+                                                static_cast<GLsizei>(solidSphereVertex.size()),
+                                                solidSphereVertex.data(),
+                                                static_cast<GLsizei>(solidSphereIndex.size()),
+                                                solidSphereIndex.data());
 
     glfwSetTime(0.0);
 
