@@ -247,10 +247,15 @@ int main()
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
 
+    // uniform変数の場所を取得する
     const GLuint program(loadProgram("resources/point.vert", "resources/point.frag"));
     const GLint projectionLocation(glGetUniformLocation(program, "projection"));
     const GLint modelViewLocation(glGetUniformLocation(program, "modelView"));
     const GLint normalMatrixLocation(glGetUniformLocation(program, "normalMatrix"));
+    const GLint LposLocation(glGetUniformLocation(program, "Lpos"));
+    const GLint LambLocation(glGetUniformLocation(program, "Lamb"));
+    const GLint LdiffLocation(glGetUniformLocation(program, "Ldiff"));
+    const GLint LspecLocation(glGetUniformLocation(program, "Lspec"));
 
     // 球の分割数
     const int slices = 16, stacks = 8;
@@ -267,7 +272,7 @@ int main()
             const float z = r * std::cos(6.283185f * s), x = r * std::sin(6.283185f * s);
 
             // 頂点属性
-            const Object::Vertex v = {x, y, z, x, y, x};
+            const Object::Vertex v = { x, y, z, x, y, x };
             // 頂点属性を追加する
             solidSphereVertex.push_back(v);
         }
@@ -303,6 +308,12 @@ int main()
                                                 solidSphereVertex.data(),
                                                 static_cast<GLsizei>(solidSphereIndex.size()),
                                                 solidSphereIndex.data());
+
+    // 光源データ
+    static constexpr GLfloat Lpos[] = { 0.0f, 0.0f, 5.0f, 1.0f };
+    static constexpr GLfloat Lamb[] = { 0.2f, 0.1f, 0.1f };
+    static constexpr GLfloat Ldiff[] = { 1.0f, 0.5f, 0.5f };
+    static constexpr GLfloat Lspec[] = { 1.0f, 0.5f, 0.5f };
 
     glfwSetTime(0.0);
 
@@ -350,8 +361,13 @@ int main()
         modelview1.getNormalMatrix(normalMatrix);
 
         // uniform 変数に値を設定する
+        glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.data());
         glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, modelview1.data());
         glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, normalMatrix);
+        glUniform4fv(LposLocation, 1, Lpos);
+        glUniform3fv(LambLocation, 1, Lamb);
+        glUniform3fv(LdiffLocation, 1, Ldiff);
+        glUniform3fv(LspecLocation, 1, Lspec);
 
         // 二つ目の図形を描画する
         shape->draw();
