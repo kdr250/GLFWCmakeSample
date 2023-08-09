@@ -311,10 +311,11 @@ int main()
                                                 solidSphereIndex.data());
 
     // 光源データ
-    static constexpr Vector Lpos = { 0.0f, 0.0f, 5.0f, 1.0f };
-    static constexpr GLfloat Lamb[] = { 0.2f, 0.1f, 0.1f };
-    static constexpr GLfloat Ldiff[] = { 1.0f, 0.5f, 0.5f };
-    static constexpr GLfloat Lspec[] = { 1.0f, 0.5f, 0.5f };
+    static constexpr int Lcount = 2;
+    static constexpr Vector Lpos[] = { 0.0f, 0.0f, 5.0f, 1.0f, 8.0f, 0.0f, 0.0f, 1.0f };
+    static constexpr GLfloat Lamb[] = { 0.2f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f };
+    static constexpr GLfloat Ldiff[] = { 1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f };
+    static constexpr GLfloat Lspec[] = { 1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f };
 
     glfwSetTime(0.0);
 
@@ -365,10 +366,13 @@ int main()
         glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection.data());
         glUniformMatrix4fv(modelViewLocation, 1, GL_FALSE, modelview1.data());
         glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, normalMatrix);
-        glUniform4fv(LposLocation, 1, (view * Lpos).data());
-        glUniform3fv(LambLocation, 1, Lamb);
-        glUniform3fv(LdiffLocation, 1, Ldiff);
-        glUniform3fv(LspecLocation, 1, Lspec);
+        for (int i = 0; i < Lcount; i++)
+        {
+            glUniform4fv(LposLocation + i, 1, (view * Lpos[i]).data());
+        }
+        glUniform3fv(LambLocation, Lcount, Lamb);
+        glUniform3fv(LdiffLocation, Lcount, Ldiff);
+        glUniform3fv(LspecLocation, Lcount, Lspec);
 
         // 二つ目の図形を描画する
         shape->draw();
