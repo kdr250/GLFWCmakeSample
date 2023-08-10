@@ -15,6 +15,8 @@
 #include "SolidShapeIndex.h"
 #include "Window.h"
 #include "Vector.h"
+#include "Uniform.h"
+#include "Material.h"
 
 /** 面ごとに法線を変えた六面体の頂点属性 */
 constexpr Object::Vertex solidCubeVertex[] = {
@@ -258,6 +260,12 @@ int main()
     const GLint LdiffLocation(glGetUniformLocation(program, "Ldiff"));
     const GLint LspecLocation(glGetUniformLocation(program, "Lspec"));
 
+    // uniform blockの場所を取得する
+    const GLint materialLocation(glGetUniformBlockIndex(program, "Material"));
+
+    // uniform blockの場所を0番の結合ポイントに結びつける
+    glUniformBlockBinding(program, materialLocation, 0);
+
     // 球の分割数
     const int slices = 16, stacks = 8;
 
@@ -317,6 +325,19 @@ int main()
     static constexpr GLfloat Ldiff[] = { 1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f };
     static constexpr GLfloat Lspec[] = { 1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f };
 
+    // 色データ
+    static constexpr Material color[] =
+    {
+        // Kamb             Kdiff             Kspec             Kshi
+        { 0.6f, 0.6f, 0.2f, 0.6f, 0.6f, 0.2f, 0.3f, 0.3f, 0.3f, 30.0f },
+        { 0.1f, 0.1f, 0.5f, 0.1f, 0.1f, 0.5f, 0.4f, 0.4f, 0.4f, 60.0f }
+    };
+
+    const Uniform<Material> material[] =
+    {
+        &color[0], &color[1]
+    };
+
     glfwSetTime(0.0);
 
     while (window)
@@ -354,6 +375,7 @@ int main()
         glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, normalMatrix);
 
         // 図形を描画
+        material[0].select(0);
         shape->draw();
 
         // 二つ目のモデルビュー変換行列を求める
@@ -375,6 +397,7 @@ int main()
         glUniform3fv(LspecLocation, Lcount, Lspec);
 
         // 二つ目の図形を描画する
+        material[1].select(0);
         shape->draw();
 
         window.swapBuffers();
