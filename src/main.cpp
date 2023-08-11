@@ -8,15 +8,15 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "Material.h"
 #include "Matrix.h"
 #include "Shape.h"
 #include "ShapeIndex.h"
 #include "SolidShape.h"
 #include "SolidShapeIndex.h"
-#include "Window.h"
-#include "Vector.h"
 #include "Uniform.h"
-#include "Material.h"
+#include "Vector.h"
+#include "Window.h"
 
 /** 面ごとに法線を変えた六面体の頂点属性 */
 constexpr Object::Vertex solidCubeVertex[] = {
@@ -281,7 +281,7 @@ int main()
             const float z = r * std::cos(6.283185f * s), x = r * std::sin(6.283185f * s);
 
             // 頂点属性
-            const Object::Vertex v = { x, y, z, x, y, x };
+            const Object::Vertex v = {x, y, z, x, y, x};
             // 頂点属性を追加する
             solidSphereVertex.push_back(v);
         }
@@ -319,24 +319,19 @@ int main()
                                                 solidSphereIndex.data());
 
     // 光源データ
-    static constexpr int Lcount = 2;
-    static constexpr Vector Lpos[] = { 0.0f, 0.0f, 5.0f, 1.0f, 8.0f, 0.0f, 0.0f, 1.0f };
-    static constexpr GLfloat Lamb[] = { 0.2f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f };
-    static constexpr GLfloat Ldiff[] = { 1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f };
-    static constexpr GLfloat Lspec[] = { 1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f };
+    static constexpr int Lcount      = 2;
+    static constexpr Vector Lpos[]   = {0.0f, 0.0f, 5.0f, 1.0f, 8.0f, 0.0f, 0.0f, 1.0f};
+    static constexpr GLfloat Lamb[]  = {0.2f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
+    static constexpr GLfloat Ldiff[] = {1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f};
+    static constexpr GLfloat Lspec[] = {1.0f, 0.5f, 0.5f, 0.9f, 0.9f, 0.9f};
 
     // 色データ
-    static constexpr Material color[] =
-    {
+    static constexpr Material color[] = {
         // Kamb             Kdiff             Kspec             Kshi
-        { 0.6f, 0.6f, 0.2f, 0.6f, 0.6f, 0.2f, 0.3f, 0.3f, 0.3f, 30.0f },
-        { 0.1f, 0.1f, 0.5f, 0.1f, 0.1f, 0.5f, 0.4f, 0.4f, 0.4f, 60.0f }
-    };
+        {0.6f, 0.6f, 0.2f, 0.6f, 0.6f, 0.2f, 0.3f, 0.3f, 0.3f, 30.0f},
+        {0.1f, 0.1f, 0.5f, 0.1f, 0.1f, 0.5f, 0.4f, 0.4f, 0.4f, 60.0f}};
 
-    const Uniform<Material> material[] =
-    {
-        &color[0], &color[1]
-    };
+    const Uniform<Material> material(color, 2);
 
     glfwSetTime(0.0);
 
@@ -375,7 +370,7 @@ int main()
         glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, normalMatrix);
 
         // 図形を描画
-        material[0].select(0);
+        material.select(0, 0);
         shape->draw();
 
         // 二つ目のモデルビュー変換行列を求める
@@ -397,7 +392,7 @@ int main()
         glUniform3fv(LspecLocation, Lcount, Lspec);
 
         // 二つ目の図形を描画する
-        material[1].select(0);
+        material.select(0, 1);
         shape->draw();
 
         window.swapBuffers();
