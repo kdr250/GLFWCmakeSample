@@ -1,5 +1,5 @@
 #version 150 core
-uniform mat4 modelview;
+uniform mat4 modelView;
 uniform mat4 projection;
 uniform mat3 normalMatrix;
 const int Lcount = 2;
@@ -21,7 +21,7 @@ out vec3 N;
 
 void main()
 {
-    P = modelview * position;
+    P = modelView * position;
     N = normalize(normalMatrix * normal);
     Idiff = vec3(0.0);
     for (int i = 0; i < Lcount; ++i)
